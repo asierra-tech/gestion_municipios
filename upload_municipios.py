@@ -6,21 +6,12 @@ from tqdm import tqdm
 
 #Configuración de la base de datos
 DB_CONFIG = {
-    "dbname": "betipo-valoracion",
-    "user": "betipo",
-    "password": "B3T1P0",
+    "dbname": "",
+    "user": "",
+    "password": "",
     "host": "localhost",
     "port": "5432"
 }
-
-# DB_CONFIG = {
-#     "dbname": "betipo-valoracion-dev",
-#     "user": "doadmin",
-#     "password": "AVNS_z5jgGVGmqBsRCmMukgc",
-#     "host": "pg-betipo-do-user-20048063-0.g.db.ondigitalocean.com",
-#     "port": "25060"
-# }
-
 # Configuración de la carpeta
 INPUT_DIR = "output"  # Carpeta con los archivos GeoJSON
 
