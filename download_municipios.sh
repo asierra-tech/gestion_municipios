@@ -13,7 +13,7 @@ command -v osmtogeojson >/dev/null 2>&1 || {
 }
 
 # Leer archivo con códigos municipales
-input_file="municipios_ine_1.txt"
+input_file="municipios_ine.txt"
 
 if [[ ! -f "$input_file" ]]; then
     echo "Error: No se encuentra el archivo $input_file"
@@ -48,7 +48,7 @@ do
     curl -s -X POST -d @- https://overpass-api.de/api/interpreter <<EOF | osmtogeojson > "$output_file"
 [out:json][timeout:300];
 area["ISO3166-1"="ES"][admin_level=2]->.espana;
-relation[boundary="administrative"][admin_level="8"]["ine:municipio"="${ine_code}"](area.espana);
+relation["ine:municipio"="${ine_code}"](area.espana);
 out geom;
 EOF
 

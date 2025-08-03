@@ -6,12 +6,13 @@ from tqdm import tqdm
 
 #Configuración de la base de datos
 DB_CONFIG = {
-    "dbname": "",
-    "user": "",
-    "password": "",
-    "host": "localhost",
-    "port": "5432"
+    "dbname": "betipo-valoracion-dev",
+    "user": "doadmin",
+    "password": "AVNS_z5jgGVGmqBsRCmMukgc",
+    "host": "pg-betipo-do-user-20048063-0.g.db.ondigitalocean.com",
+    "port": "25060"
 }
+
 # Configuración de la carpeta
 INPUT_DIR = "output"  # Carpeta con los archivos GeoJSON
 
@@ -48,9 +49,9 @@ def crear_tabla(conn):
                 CREATE INDEX IF NOT EXISTS idx_municipios_ine 
                 ON municipios (ine);
             """)
-            cur.execute ("""
-delete from municipios;
-                         """)
+#             cur.execute ("""
+# delete from municipios;
+#                          """)
             conn.commit()
         return True
     except Exception as e:
@@ -95,7 +96,7 @@ def insertar_municipio(conn, ine_code, propiedades, geometry):
         with conn.cursor() as cur:
             # Convertir geometría a texto JSON
             geometry_json = json.dumps(geometry)
-            
+            print (geometry_json)
             # Insertar datos
             cur.execute(sql.SQL("""
                 INSERT INTO municipios (
@@ -158,9 +159,9 @@ def importar_geojson_desde_carpeta():
         return
     
     # Crear tabla si no existe
-    if not crear_tabla(conn):
-        conn.close()
-        return
+    # if not crear_tabla(conn):
+    #     conn.close()
+    #     return
     
     # Obtener lista de archivos GeoJSON
     archivos = [f for f in os.listdir(INPUT_DIR) if f.lower().endswith(".geojson")]
@@ -188,15 +189,6 @@ def importar_geojson_desde_carpeta():
             print(f"❌ Falló: {archivo}")
             fallos += 1
             break
-    
-    # Optimizar la base de datos después de importar
-    try:
-        print("Optimizando base de datos...")
-        with conn.cursor() as cur:
-            cur.execute("VACUUM ANALYZE municipios;")
-        conn.commit()
-    except Exception as e:
-        print(f"Error al optimizar base de datos: {str(e)}")
     
     conn.close()
     print(f"\n✅ Proceso completado. Éxitos: {exitos}, ❌ Fallos: {fallos}")
